@@ -8,6 +8,8 @@ import AuthSocialButton from './AuthSocialButton'
 import { FaGithub } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import axios from 'axios'
+import toast from 'react-hot-toast'
+import { signIn } from 'next-auth/react'
 
 type Variant = 'LOGIN' | 'REGISTER'
 
@@ -39,18 +41,46 @@ const AuthForm = () => {
 		setIsLoading(true)
 
 		if (variant === 'REGISTER') {
-			axios.post('/api/register', data)
-			setIsLoading(false)
+			axios
+				.post('/api/register', data)
+				.then(() => toast.success('Account created successfully'))
+				.catch(() => toast.error('Something went wrong'))
+				.finally(() => setIsLoading(false))
 		} else if (variant === 'LOGIN') {
-			// NextAuth Sign In
+			signIn('credentials', {
+				...data,
+				redirect: false,
+			})
+				.then((callback) => {
+					if (callback?.error) {
+						toast.error('Something went wrong')
+					}
+
+					if (callback?.ok && !callback?.error) {
+						toast.success('Logged in')
+					}
+				})
+				.finally(() => setIsLoading(false))
 		}
 		setIsLoading(false)
 	}
 
-	const socialAction = (action: string) => {
+	const socialAction = async (action: string) => {
 		setIsLoading(true)
 
-		// NextAuth Social Sign In
+		signIn(action, {
+			redirect: false,
+		}).then((callback) => {
+			if (callback?.error) {
+				toast.error('Something went wrong')
+				console.log(callback.error)
+			}
+
+			if (callback?.ok && !callback?.error) {
+				toast.success('Logged in')
+				console.log(callback)
+			}
+		}).finally(() => setIsLoading(false))
 	}
 
 	return (
