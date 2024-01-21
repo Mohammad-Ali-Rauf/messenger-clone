@@ -33,7 +33,6 @@ const AuthForm = () => {
 		defaultValues: {
 			name: '',
 			email: '',
-			password: '',
 		},
 	})
 
@@ -105,15 +104,6 @@ const AuthForm = () => {
 						register={register}
 						errors={errors}
 						disabled={isLoading}
-					/>
-					<Input
-						placeholder='●●●●●●'
-						id='password'
-						type='password'
-						label='Password'
-						register={register}
-						disabled={isLoading}
-						errors={errors}
 					/>
 					<div>
 						<Button disabled={isLoading} fullWidth type='submit'>
