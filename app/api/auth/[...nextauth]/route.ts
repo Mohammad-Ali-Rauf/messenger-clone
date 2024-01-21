@@ -10,14 +10,11 @@ import { AuthOptions } from 'next-auth'
 
 export const authOptions: AuthOptions = {
 	adapter: PrismaAdapter(prisma),
+	callbacks: { async redirect({ url, baseUrl }) { return baseUrl }, },
 	providers: [
 		GithubProvider({
 			clientId: process.env.GITHUB_ID ?? "",
 			clientSecret: process.env.GITHUB_SECRET ?? "",
-		}),
-		GoogleProvider({
-			clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
 		}),
 		CredentialsProvider({
 			name: 'credentials',
